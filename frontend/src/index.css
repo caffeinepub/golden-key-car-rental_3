@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* Gold & Charcoal Luxury Theme */
+    --background: 0.14 0.005 260;
+    --foreground: 0.96 0.005 90;
+
+    --card: 0.18 0.006 260;
+    --card-foreground: 0.96 0.005 90;
+
+    --popover: 0.2 0.006 260;
+    --popover-foreground: 0.96 0.005 90;
+
+    --primary: 0.72 0.12 75;
+    --primary-foreground: 0.12 0.005 260;
+
+    --secondary: 0.22 0.006 260;
+    --secondary-foreground: 0.96 0.005 90;
+
+    --muted: 0.22 0.006 260;
+    --muted-foreground: 0.6 0.01 260;
+
+    --accent: 0.72 0.12 75;
+    --accent-foreground: 0.12 0.005 260;
+
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 0.96 0.005 90;
+
+    --border: 0.28 0.008 260;
+    --input: 0.28 0.008 260;
+    --ring: 0.72 0.12 75;
+
+    --chart-1: 0.72 0.12 75;
+    --chart-2: 0.6 0.1 200;
+    --chart-3: 0.5 0.1 150;
+    --chart-4: 0.65 0.15 30;
+    --chart-5: 0.55 0.12 300;
+
+    --sidebar: 0.16 0.006 260;
+    --sidebar-foreground: 0.96 0.005 90;
+    --sidebar-primary: 0.72 0.12 75;
+    --sidebar-primary-foreground: 0.12 0.005 260;
+    --sidebar-accent: 0.22 0.006 260;
+    --sidebar-accent-foreground: 0.96 0.005 90;
+    --sidebar-border: 0.28 0.008 260;
+    --sidebar-ring: 0.72 0.12 75;
+
+    /* Gold token */
+    --gold: 0.72 0.12 75;
+    --gold-light: 0.82 0.1 80;
+    --gold-dark: 0.58 0.14 70;
+    --charcoal: 0.14 0.005 260;
+    --charcoal-light: 0.22 0.006 260;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer utilities {
+  .text-gold {
+    color: oklch(var(--gold));
+  }
+  .bg-gold {
+    background-color: oklch(var(--gold));
+  }
+  .border-gold {
+    border-color: oklch(var(--gold));
+  }
+  .text-gold-light {
+    color: oklch(var(--gold-light));
+  }
+  .bg-charcoal {
+    background-color: oklch(var(--charcoal));
+  }
+  .bg-charcoal-light {
+    background-color: oklch(var(--charcoal-light));
+  }
+  .gold-gradient {
+    background: linear-gradient(135deg, oklch(0.72 0.12 75), oklch(0.82 0.1 80), oklch(0.58 0.14 70));
+  }
+  .gold-text-gradient {
+    background: linear-gradient(135deg, oklch(0.72 0.12 75), oklch(0.88 0.08 85));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .luxury-card {
+    @apply bg-card border border-border rounded-lg shadow-lg;
+  }
+  .luxury-btn {
+    @apply bg-gold text-primary-foreground font-semibold px-6 py-2.5 rounded transition-all hover:opacity-90 active:scale-95;
+  }
+  .rtl-support {
+    direction: inherit;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(var(--charcoal));
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(var(--gold));
+  border-radius: 3px;
+}

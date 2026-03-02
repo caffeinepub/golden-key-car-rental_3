@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Enterprise-level car rental booking platform for Golden Key Car Rental L.L.C. Fully bilingual (Arabic/English with RTL), includes customer website, user dashboard, admin panel, payment gateways, analytics, WhatsApp integration, and marketing automation. Target delivery: 60–90 days.",
+  "architectural_notes": [
+    "Fully bilingual platform (Arabic/English) with RTL layout support required throughout",
+    "Real-time features (availability, notifications) require Socket.io integration",
+    "Payment processing via Stripe and/or PayPal with secure checkout flow",
+    "WhatsApp Business API used for customer communication and notifications",
+    "Multi-currency and location-based dynamic pricing engine needed"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Golden Key Car Rental hero banner — luxury car on a dark desert highway at night with golden light trails, wide cinematic composition (hero-banner.dim_1400x600.png)\n- Golden Key Car Rental logo — golden key icon with elegant serif text on a transparent dark background (logo.dim_320x100.png)\n- Placeholder car thumbnail — sleek silver sedan on a neutral dark background, studio-lit (car-placeholder.dim_600x400.png)",
+  "existing_features": [
+    {
+      "id": "feature-design-and-apply-a-premium-car-rental-visual-theme-across-the-entire-application-deep-charcoal-black-background-with-gold-c9a84c-accents-clean-white-typography-sharp-card-layouts-and-a-professional-luxury-feel-use-consistent-spacing-bold-headings-and-a-responsive-layout-that-works-on-mobile-and-desktop-apply-the-theme-globally-via-tailwind-configuration",
+      "title": "Design and apply a premium car rental visual theme across the entire application: deep charcoal/black background with gold (#C9A84C) accents, clean white typography, sharp card layouts, and a professional luxury feel. Use consistent spacing, bold headings, and a responsive layout that works on mobile and desktop. Apply the theme globally via Tailwind configuration.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-bilingual-support-english-and-arabic-with-full-rtl-layout-switching-the-language-toggle-must-flip-the-entire-ui-direction-dir-rtl-dir-ltr-and-swap-all-user-visible-text-strings-between-arabic-and-english-store-the-selected-language-preference-in-local-state",
+      "title": "Implement bilingual support (English and Arabic) with full RTL layout switching. The language toggle must flip the entire UI direction (dir='rtl' / dir='ltr') and swap all user-visible text strings between Arabic and English. Store the selected language preference in local state.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-car-listings-page-with-a-search-bar-and-filter-panel-filters-must-include-pickup-location-return-location-date-range-pickup-date-return-date-car-category-economy-suv-luxury-van-transmission-type-automatic-manual-and-maximum-daily-price-display-cars-as-responsive-grid-cards-showing-car-image-name-category-daily-rate-availability-badge-and-a-book-now-button",
+      "title": "Build a car listings page with a search bar and filter panel. Filters must include: pickup location, return location, date range (pickup date / return date), car category (Economy, SUV, Luxury, Van), transmission type (Automatic / Manual), and maximum daily price. Display cars as responsive grid cards showing: car image, name, category, daily rate, availability badge, and a 'Book Now' button.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-car-detail-page-that-shows-full-vehicle-information-photo-gallery-specifications-daily-rate-real-time-availability-calendar-and-a-dynamic-pricing-calculator-the-calculator-must-compute-total-cost-based-on-selected-rental-duration-apply-any-active-promo-code-discount-show-early-payment-discount-if-applicable-and-reflect-the-selected-currency-support-at-least-usd-aed-and-eur-currency-display",
+      "title": "Build a car detail page that shows full vehicle information: photo gallery, specifications, daily rate, real-time availability calendar, and a dynamic pricing calculator. The calculator must compute total cost based on selected rental duration, apply any active promo code discount, show early payment discount (if applicable), and reflect the selected currency. Support at least USD, AED, and EUR currency display.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-single-page-booking-flow-with-the-following-steps-rendered-inline-no-page-navigation-1-rental-details-confirmation-dates-location-car-2-add-ons-selection-child-seat-additional-driver-unlimited-km-each-with-an-extra-daily-cost-3-customer-information-form-name-email-phone-driver-s-license-number-4-payment-method-selection-stripe-credit-card-submit-the-booking-and-store-it-in-the-backend-with-status-pending",
+      "title": "Build a single-page booking flow with the following steps rendered inline (no page navigation): (1) Rental details confirmation (dates, location, car), (2) Add-ons selection (child seat, additional driver, unlimited KM — each with an extra daily cost), (3) Customer information form (name, email, phone, driver's license number), (4) Payment method selection (Stripe credit card). Submit the booking and store it in the backend with status 'pending'.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-reviews-and-ratings-system-authenticated-users-who-have-a-completed-booking-can-submit-a-rating-1-5-stars-and-a-text-review-for-a-car-display-the-average-rating-and-all-reviews-on-the-car-detail-page-store-reviews-in-the-backend-linked-to-the-car-and-user",
+      "title": "Implement a reviews and ratings system. Authenticated users who have a completed booking can submit a rating (1–5 stars) and a text review for a car. Display the average rating and all reviews on the car detail page. Store reviews in the backend linked to the car and user.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-user-dashboard-accessible-after-internet-identity-login-with-four-sections-1-profile-management-view-and-edit-name-email-phone-2-booking-history-list-of-all-past-and-current-bookings-with-status-badges-pending-confirmed-cancelled-completed-3-invoice-download-each-completed-booking-has-a-downloadable-text-html-invoice-4-booking-cancellation-users-can-cancel-a-booking-that-is-still-in-pending-or-confirmed-status",
+      "title": "Build a user dashboard (accessible after Internet Identity login) with four sections: (1) Profile Management — view and edit name, email, phone; (2) Booking History — list of all past and current bookings with status badges (pending, confirmed, cancelled, completed); (3) Invoice Download — each completed booking has a downloadable text/HTML invoice; (4) Booking Cancellation — users can cancel a booking that is still in 'pending' or 'confirmed' status.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-admin-dashboard-accessible-via-a-protected-admin-route-using-internet-identity-restricted-to-admin-principal-ids-stored-in-the-backend-the-admin-dashboard-must-include-1-car-management-create-read-update-delete-cars-crud-with-image-url-pricing-availability-toggle-2-booking-management-view-all-bookings-change-status-confirm-complete-cancel-process-refund-notes-3-user-management-view-registered-users-and-their-booking-counts-4-promotions-management-create-and-deactivate-promo-codes-with-discount-percentage-and-expiry-date-5-revenue-reports-display-total-revenue-by-month-and-per-car-breakdown",
+      "title": "Build an admin dashboard (accessible via a protected admin route using Internet Identity, restricted to admin principal IDs stored in the backend). The admin dashboard must include: (1) Car Management — create, read, update, delete cars (CRUD with image URL, pricing, availability toggle); (2) Booking Management — view all bookings, change status (confirm, complete, cancel), process refund notes; (3) User Management — view registered users and their booking counts; (4) Promotions Management — create and deactivate promo codes with discount percentage and expiry date; (5) Revenue Reports — display total revenue by month and per-car breakdown.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-static-blog-cms-pages-section-create-a-blog-listing-page-with-article-cards-title-excerpt-date-thumbnail-and-individual-blog-post-pages-store-blog-posts-in-the-backend-with-title-content-rich-text-as-plain-string-author-date-and-published-flag-admin-can-create-and-publish-blog-posts-from-the-admin-dashboard",
+      "title": "Add a static Blog / CMS pages section. Create a blog listing page with article cards (title, excerpt, date, thumbnail) and individual blog post pages. Store blog posts in the backend with title, content (rich text as plain string), author, date, and published flag. Admin can create and publish blog posts from the admin dashboard.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-floating-whatsapp-contact-button-on-all-public-facing-pages-that-opens-a-whatsapp-chat-link-wa-me-format-pre-filled-with-a-greeting-message-hello-i-am-interested-in-renting-a-car-from-golden-key-car-rental-the-phone-number-should-be-configurable-in-a-frontend-constants-file",
+      "title": "Add a floating WhatsApp contact button on all public-facing pages that opens a WhatsApp chat link (wa.me format) pre-filled with a greeting message: 'Hello, I am interested in renting a car from Golden Key Car Rental.' The phone number should be configurable in a frontend constants file.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Multi-language support (Arabic/English with RTL)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Car listings with advanced search & filters",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Car detail page with real-time availability",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Dynamic pricing calculator with promo codes, location-based pricing, early payment discounts, and multi-currency support",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Single-page booking flow with add-ons (child seat, additional driver, unlimited KM)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Secure online payment integration (Stripe/PayPal)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "WhatsApp Business API integration",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Reviews & ratings system and Blog/CMS pages",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "User dashboard: profile management, booking history, invoice download, cancellation & tracking",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Admin dashboard: car CRUD, Excel bulk import, booking management, refunds, user management, revenue reports, promotions, referral system, newsletter/marketing tools",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Real-time notifications via Socket.io",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Analytics & tracking: Google Analytics 4, Meta Pixel, Microsoft Clarity",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "SEO optimization: Schema markup, Sitemap, Robots.txt, Core Web Vitals",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Security hardening: XSS, CSRF protection, rate limiting",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Golden Key Car Rental",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,3 @@
+{
+  "frontend/src/components/admin/BlogManagementPanel.tsx": "Admin panel for creating and editing blog posts, with a table listing all posts (published and drafts) and a dialog form for title, content, author, thumbnail URL, and published toggle."
+}

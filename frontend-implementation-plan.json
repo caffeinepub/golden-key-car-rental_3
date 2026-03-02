@@ -1,0 +1,478 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Golden Key Car Rental — Core Platform (Phase 1) Frontend Implementation",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Apply premium car rental visual theme with gold (#C9A84C) accents and deep charcoal background globally via Tailwind configuration",
+      "acceptanceCriteria": [
+        "Gold and charcoal color palette is applied consistently across all pages",
+        "Typography is clean and legible in both English (LTR) and Arabic (RTL) layouts",
+        "All components follow a unified design language"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Extend Tailwind theme with custom color palette: primary gold (#C9A84C), charcoal/black background shades, white typography. Add custom font weights for headings and spacing scale for luxury feel."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Apply global styles: set body background to deep charcoal, default text to white, define heading styles with bold weights, and ensure smooth RTL/LTR transitions. Add base card and button styles consistent with luxury theme."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Implement bilingual support (English/Arabic) with full RTL layout switching and language toggle in navigation",
+      "acceptanceCriteria": [
+        "A language switcher (EN / AR) is visible in the navigation bar",
+        "Switching to Arabic flips the layout to RTL and translates all UI labels",
+        "Switching back to English restores LTR layout and English text",
+        "The selected language persists within the session"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/contexts/LanguageContext.tsx",
+          "operation": "create",
+          "description": "Create a LanguageContext that manages current language state (en/ar), provides a toggleLanguage function, and stores language preference in localStorage. Export LanguageProvider and useLanguage hook. Include translation dictionary for all UI strings used across the app."
+        },
+        {
+          "path": "frontend/src/components/LanguageSwitcher.tsx",
+          "operation": "create",
+          "description": "Create a LanguageSwitcher component that displays EN/AR toggle button, uses useLanguage hook to switch languages, and applies dir='rtl' or dir='ltr' to document root element on toggle. Style with gold accent for active language."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wrap the application with LanguageProvider and add a useEffect that listens to language changes and updates the document.documentElement.dir attribute accordingly."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Build car listings page with search bar, filter panel (location, dates, category, transmission, price), and responsive grid display",
+      "acceptanceCriteria": [
+        "Car listing cards render with image, name, category, price, and availability",
+        "Filter panel allows filtering by location, dates, category, transmission, and price",
+        "Applying filters updates the displayed car list"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useGetAvailableCars.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches available cars from backend using actor.getAvailableCars(). Return cars array, loading state, and error state. Enable the query only when actor is available."
+        },
+        {
+          "path": "frontend/src/components/CarListingCard.tsx",
+          "operation": "create",
+          "description": "Create a responsive card component that displays car image, name, category badge, transmission type, daily rate in USD, availability badge (green if available), and a 'Book Now' button. Style with charcoal background, gold accents, and white text. Use the translation function from LanguageContext for all labels."
+        },
+        {
+          "path": "frontend/src/components/CarFilterPanel.tsx",
+          "operation": "create",
+          "description": "Create a filter panel component with inputs for: pickup location (text), return location (text), date range (pickup/return date pickers), category dropdown (Economy/SUV/Luxury/Van), transmission type dropdown (Automatic/Manual), and max daily price slider. Emit filter changes via callback prop. Style consistently with theme and support RTL layout."
+        },
+        {
+          "path": "frontend/src/pages/CarListings.tsx",
+          "operation": "create",
+          "description": "Create CarListings page that uses useGetAvailableCars hook, renders CarFilterPanel, applies client-side filtering based on user input, and displays filtered cars in a responsive grid using CarListingCard components. Include a search bar at the top for quick text search by car name. Wire the 'Book Now' button to navigate to car detail page using the car ID."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for '/cars' path that renders CarListings page."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Build car detail page with photo gallery, specifications, availability calendar, dynamic pricing calculator, promo code validation, and currency selector (USD/AED/EUR)",
+      "acceptanceCriteria": [
+        "Car detail page displays photo gallery, specs, and availability",
+        "Pricing calculator updates total cost dynamically as dates change",
+        "Promo code input validates against stored codes and applies the discount",
+        "Early payment discount is shown when the user selects full upfront payment",
+        "Currency selector updates displayed prices across the page"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useGetCar.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches a single car by ID using actor.getCar(carId). Accept carId as parameter and enable query only when carId and actor are available."
+        },
+        {
+          "path": "frontend/src/hooks/useGetCarReviews.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches reviews for a car using actor.getCarReviews(carId). Accept carId as parameter and enable query only when carId and actor are available."
+        },
+        {
+          "path": "frontend/src/hooks/useValidatePromoCode.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that validates a promo code using actor.validatePromoCode(code). Return validation result with discount percentage or null if invalid."
+        },
+        {
+          "path": "frontend/src/components/CarPhotoGallery.tsx",
+          "operation": "create",
+          "description": "Create a photo gallery component that displays car images in a carousel or grid layout. Accept imageUrls array as prop. Style with charcoal background and gold navigation controls."
+        },
+        {
+          "path": "frontend/src/components/PricingCalculator.tsx",
+          "operation": "create",
+          "description": "Create a pricing calculator component that accepts daily rate, selected date range, promo code discount percentage, early payment flag, and currency selector. Compute total cost dynamically: (dailyRate * days * currencyRate) - promoDiscount - earlyPaymentDiscount. Display breakdown with line items. Include currency selector dropdown (USD/AED/EUR) and early payment checkbox. Use hardcoded exchange rates (USD=1, AED=3.67, EUR=0.92). Style with gold accents."
+        },
+        {
+          "path": "frontend/src/components/PromoCodeInput.tsx",
+          "operation": "create",
+          "description": "Create a promo code input component with text field and 'Apply' button. Use useValidatePromoCode mutation to validate code on submit. Display success message with discount percentage or error message if invalid. Emit validated discount percentage to parent via callback."
+        },
+        {
+          "path": "frontend/src/pages/CarDetail.tsx",
+          "operation": "create",
+          "description": "Create CarDetail page that uses useGetCar and useGetCarReviews hooks with carId from route params. Render CarPhotoGallery, car specifications (category, transmission, daily rate), availability calendar (simple date range picker showing unavailable dates as disabled), PricingCalculator with PromoCodeInput integration, and reviews section displaying average rating and list of reviews. Include a 'Proceed to Booking' button that navigates to booking flow with selected dates and car ID. If the generated car placeholder image exists at frontend/public/assets/generated/car-placeholder.dim_600x400.png, use it as fallback for missing car images."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for '/cars/:carId' path that renders CarDetail page."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Build single-page booking flow with rental confirmation, add-ons selection, customer info form, and Stripe payment integration",
+      "acceptanceCriteria": [
+        "All booking steps are visible on a single scrollable page with a progress indicator",
+        "Add-ons are selectable and their costs are added to the price summary",
+        "Customer information form validates required fields before submission",
+        "Stripe payment form is embedded and processes payment on submit",
+        "Successful booking creates a record in the backend with status 'pending' and all booking details"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useBookCar.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that books a car using actor.bookCar(carId, startDate, endDate, addOns). Return booking result with booking ID. Use the authorization component's authentication requirements: verify actor is available before mutation."
+        },
+        {
+          "path": "frontend/src/hooks/useCreateCheckoutSession.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook for Stripe checkout. Use the stripe component to support credit card payments. Call actor.createCheckoutSession(items, successUrl, cancelUrl) where items include the booking details as ShoppingItem. Parse JSON result to extract CheckoutSession with url field. Validate that session.url exists before returning. The successUrl should be '/payment-success' and cancelUrl should be '/payment-failure'."
+        },
+        {
+          "path": "frontend/src/components/BookingStepIndicator.tsx",
+          "operation": "create",
+          "description": "Create a progress indicator component that displays 4 steps: (1) Rental Details, (2) Add-ons, (3) Customer Info, (4) Payment. Highlight the current step in gold. Accept currentStep prop (1-4)."
+        },
+        {
+          "path": "frontend/src/components/AddOnsSelector.tsx",
+          "operation": "create",
+          "description": "Create an add-ons selector component with checkboxes for: child seat, additional driver, unlimited KM. Each add-on displays name, description, and daily cost in USD. Accept selected add-ons state and onChange callback. Display total add-ons cost."
+        },
+        {
+          "path": "frontend/src/components/CustomerInfoForm.tsx",
+          "operation": "create",
+          "description": "Create a customer information form with required fields: name, email, phone, driver's license number. Use controlled inputs with validation (email format, phone format). Accept form data state and onChange callback. Display validation errors inline."
+        },
+        {
+          "path": "frontend/src/pages/BookingFlow.tsx",
+          "operation": "create",
+          "description": "Create BookingFlow page that renders all steps on a single scrollable page with BookingStepIndicator at the top. Step 1: Display rental details (car name, dates, location) passed via route state. Step 2: Render AddOnsSelector. Step 3: Render CustomerInfoForm. Step 4: Display price summary (base cost + add-ons + discounts) and embed Stripe payment button. Use useBookCar to create booking record first, then use useCreateCheckoutSession with booking details as shopping items. On successful checkout session creation, redirect to session.url using window.location.href (never use router navigation for Stripe URLs). Validate that session.url is not undefined before redirecting. Use the stripe component: verify the component's usage instructions before implementing. Ensure the user must be authenticated (use Internet Identity from authorization component) before accessing this page. If not authenticated, show login prompt."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for '/booking' path that renders BookingFlow page. Protect this route by wrapping it with an authentication guard that checks if the user is logged in using the authorization component."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Implement reviews and ratings system allowing authenticated users with completed bookings to submit 1-5 star ratings and text reviews",
+      "acceptanceCriteria": [
+        "Review submission form appears on the car detail page for eligible authenticated users",
+        "Star rating (1–5) and text comment are required fields",
+        "Submitted reviews appear below the car details with author name, rating, and date",
+        "Average rating is calculated and displayed on the car card and detail page"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useAddReview.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that submits a review using actor.addReview(carId, rating, comment). Invalidate carReviews query on success. Use the authorization component to ensure only authenticated users can submit reviews."
+        },
+        {
+          "path": "frontend/src/components/ReviewForm.tsx",
+          "operation": "create",
+          "description": "Create a review submission form with star rating selector (1-5 stars) and textarea for comment. Use useAddReview mutation to submit review. Display success or error message after submission. Accept carId as prop. Style with gold stars and charcoal background. Only render for authenticated users who have completed a booking for this car (check authentication state from authorization component)."
+        },
+        {
+          "path": "frontend/src/components/ReviewsList.tsx",
+          "operation": "create",
+          "description": "Create a reviews list component that displays all reviews for a car. For each review, show: reviewer name (from user profile), star rating (gold stars), comment text, and date. Calculate and display average rating at the top with gold star icon. Accept reviews array as prop. Use the authorization component's getUserProfile method to fetch reviewer names by principal."
+        },
+        {
+          "path": "frontend/src/pages/CarDetail.tsx",
+          "operation": "modify",
+          "description": "Add ReviewForm and ReviewsList components to CarDetail page. Display ReviewForm only for authenticated users. Pass carId and reviews data to both components. Calculate average rating from reviews and display it prominently near the car title with gold stars."
+        },
+        {
+          "path": "frontend/src/components/CarListingCard.tsx",
+          "operation": "modify",
+          "description": "Add average rating display (gold stars and numeric value) to car listing cards. Accept average rating as optional prop and display it below the car name if available."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Build user dashboard with profile management, booking history, invoice download, and booking cancellation",
+      "acceptanceCriteria": [
+        "Dashboard is protected and requires Internet Identity authentication",
+        "Profile section shows current user data and allows edits",
+        "Booking history lists all bookings with correct status badges",
+        "Invoice for completed bookings is viewable/downloadable",
+        "Cancel button appears for cancellable bookings and updates status to 'cancelled' in the backend"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useGetMyBookings.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches current user's bookings using actor.getMyBookings(). Enable query only when actor is available and user is authenticated. Use the authorization component to verify authentication."
+        },
+        {
+          "path": "frontend/src/hooks/useCancelBooking.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that cancels a booking using actor.cancelBooking(bookingId). Invalidate myBookings query on success. Use the authorization component to ensure only authenticated users can cancel bookings."
+        },
+        {
+          "path": "frontend/src/hooks/useUpdateProfile.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that updates user profile using actor.saveCallerUserProfile(profile). Invalidate currentUserProfile query on success. Use the authorization component's saveCallerUserProfile method."
+        },
+        {
+          "path": "frontend/src/components/ProfileSection.tsx",
+          "operation": "create",
+          "description": "Create a profile management section that displays current user profile (name, email, phone) with edit mode toggle. Use form inputs for editing and useUpdateProfile mutation to save changes. Use the authorization component's getCallerUserProfile and saveCallerUserProfile methods."
+        },
+        {
+          "path": "frontend/src/components/BookingHistoryList.tsx",
+          "operation": "create",
+          "description": "Create a booking history list component that displays all user bookings with: car name, dates, status badge (color-coded: pending=yellow, confirmed=blue, cancelled=red, completed=green), total amount, and action buttons. For pending/confirmed bookings, show 'Cancel' button using useCancelBooking mutation. For completed bookings, show 'Download Invoice' link. Accept bookings array as prop."
+        },
+        {
+          "path": "frontend/src/components/InvoiceView.tsx",
+          "operation": "create",
+          "description": "Create an invoice view component that generates HTML invoice for a completed booking. Display: Golden Key Car Rental header with logo, booking details (car, dates, customer info), add-ons list, price breakdown, and total amount. Include a 'Download' button that converts the HTML to a downloadable text/HTML file. Accept booking object as prop. Style with luxury theme."
+        },
+        {
+          "path": "frontend/src/pages/UserDashboard.tsx",
+          "operation": "create",
+          "description": "Create UserDashboard page with four sections: (1) ProfileSection, (2) BookingHistoryList using useGetMyBookings, (3) InvoiceView (modal or expandable panel for selected booking), (4) Cancellation confirmation dialog. Use tab navigation to switch between sections. Protect this page with authentication guard from the authorization component. If not authenticated, redirect to login. Display user's name from profile in the header. If the generated logo image exists at frontend/public/assets/generated/logo.dim_320x100.png, display it in the dashboard header."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for '/dashboard' path that renders UserDashboard page. Wrap this route with authentication guard from the authorization component to ensure only authenticated users can access it."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Build admin dashboard with car management, booking management, user management, promotions management, and revenue reports",
+      "acceptanceCriteria": [
+        "Admin route is inaccessible to non-admin principals",
+        "Admin can add, edit, and delete car records",
+        "Admin can view all bookings and update their status",
+        "Admin can create promo codes with discount value and expiry date",
+        "Revenue report shows monthly totals and per-car revenue"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useIsCallerAdmin.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that checks if current user is admin using actor.isCallerAdmin(). Enable query only when actor is available and user is authenticated. Use the authorization component to verify admin role."
+        },
+        {
+          "path": "frontend/src/hooks/useCreateCar.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that creates a car using actor.createCar(name, category, transmission, dailyRateUSD, imageUrls). Invalidate availableCars query on success."
+        },
+        {
+          "path": "frontend/src/hooks/useUpdateCar.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that updates a car using actor.updateCar(carId, name, category, transmission, dailyRateUSD, imageUrls, availability, isActive). Invalidate car and availableCars queries on success."
+        },
+        {
+          "path": "frontend/src/hooks/useDeleteCar.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that deletes a car using actor.deleteCar(carId). Invalidate availableCars query on success."
+        },
+        {
+          "path": "frontend/src/hooks/useGetAllBookings.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches all bookings using actor.getAllBookings(). Enable query only when actor is available and user is admin."
+        },
+        {
+          "path": "frontend/src/hooks/useSetBookingStatus.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that updates booking status using actor.setBookingStatus(bookingId, status). Invalidate allBookings query on success."
+        },
+        {
+          "path": "frontend/src/hooks/useGetAllUsers.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches all users with booking counts using actor.getAllUsers(). Enable query only when actor is available and user is admin."
+        },
+        {
+          "path": "frontend/src/hooks/useCreatePromoCode.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that creates a promo code using actor.createPromoCode(code, percentage, expiry). Accept code string, discount percentage (1-100), and expiry date timestamp as parameters."
+        },
+        {
+          "path": "frontend/src/hooks/useDeactivatePromoCode.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that deactivates a promo code using actor.deactivatePromoCode(code)."
+        },
+        {
+          "path": "frontend/src/hooks/useGetRevenue.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches total revenue using actor.getTotalRevenue() and per-car revenue using actor.getRevenuePerCar(). Enable queries only when actor is available and user is admin."
+        },
+        {
+          "path": "frontend/src/components/admin/CarManagementTable.tsx",
+          "operation": "create",
+          "description": "Create a car management table component with columns: image thumbnail, name, category, transmission, daily rate, availability toggle, actions (edit/delete). Use useCreateCar, useUpdateCar, and useDeleteCar mutations. Include 'Add Car' button that opens a form modal. Use the blob-storage component to support image uploads: wire ExternalBlob for car image URLs. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/admin/BookingManagementTable.tsx",
+          "operation": "create",
+          "description": "Create a booking management table component with columns: booking ID, user name (from profile), car name, dates, status dropdown (pending/confirmed/completed/cancelled), total amount, actions (change status). Use useGetAllBookings and useSetBookingStatus. Allow admin to select new status from dropdown and save changes."
+        },
+        {
+          "path": "frontend/src/components/admin/UserManagementTable.tsx",
+          "operation": "create",
+          "description": "Create a user management table component with columns: principal ID (truncated), user name (from profile), booking count, registration date. Use useGetAllUsers. Display principal IDs in a copy-to-clipboard format. Use the user-approval component to display approval status and allow admin to approve/reject users. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/admin/PromotionsManagementPanel.tsx",
+          "operation": "create",
+          "description": "Create a promotions management panel with form to create new promo codes (code input, percentage slider, expiry date picker) and table of existing promo codes with deactivate button. Use useCreatePromoCode and useDeactivatePromoCode mutations. Display active/inactive status with color badges."
+        },
+        {
+          "path": "frontend/src/components/admin/RevenueReportPanel.tsx",
+          "operation": "create",
+          "description": "Create a revenue report panel that displays total revenue (large number in gold) and per-car revenue breakdown table (car name, number of bookings, total revenue). Use useGetRevenue hook. Include simple bar chart visualization if possible (optional). Group revenue by month using booking dates from completed bookings."
+        },
+        {
+          "path": "frontend/src/components/admin/StripeConfigPanel.tsx",
+          "operation": "create",
+          "description": "Create a Stripe configuration panel for admin to set up payment integration. Use the stripe component: check if Stripe is configured using actor.isStripeConfigured(). If not configured, display a form with fields for Stripe secret key and allowed countries (multi-select). Use actor.setStripeConfiguration() to save config. Display confirmation message on success. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/AdminDashboard.tsx",
+          "operation": "create",
+          "description": "Create AdminDashboard page with tab navigation for: (1) Car Management, (2) Booking Management, (3) User Management, (4) Promotions, (5) Revenue Reports, (6) Stripe Configuration. Render corresponding components for each tab. Protect this page with admin-only guard using useIsCallerAdmin hook. If user is not admin, show AccessDeniedScreen component. Use the authorization component to restrict access to admin principals only. Use the user-approval component to ensure admin has been approved before granting access. If the generated logo image exists at frontend/public/assets/generated/logo.dim_320x100.png, display it in the admin header."
+        },
+        {
+          "path": "frontend/src/components/AccessDeniedScreen.tsx",
+          "operation": "create",
+          "description": "Create an AccessDeniedScreen component that displays a message: 'Access Denied. You do not have permission to view this page.' Include a 'Go to Home' button that navigates to the homepage. Style with charcoal background and gold accents."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for '/admin' path that renders AdminDashboard page. Wrap this route with admin authentication guard that checks useIsCallerAdmin and redirects non-admin users to AccessDeniedScreen."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Add static blog/CMS pages section with blog listing, individual blog posts, and admin blog management",
+      "acceptanceCriteria": [
+        "Blog listing page displays all published posts as cards",
+        "Clicking a card navigates to the full blog post page",
+        "Admin dashboard has a 'Blog Posts' section to create and publish posts",
+        "Unpublished posts do not appear on the public blog listing"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useGetPublishedBlogPosts.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches published blog posts using actor.getPublishedBlogPosts(). Enable query only when actor is available. No authentication required for public blog access."
+        },
+        {
+          "path": "frontend/src/hooks/useGetBlogPost.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches a single blog post by ID using actor.getBlogPost(postId). Accept postId as parameter. Enable query only when postId and actor are available."
+        },
+        {
+          "path": "frontend/src/hooks/useGetAllBlogPosts.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches all blog posts (including unpublished) using actor.getAllBlogPosts(). Enable query only when actor is available and user is admin."
+        },
+        {
+          "path": "frontend/src/hooks/useCreateOrUpdateBlogPost.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that creates or updates a blog post using actor.createOrUpdateBlogPost(title, content, author, published, thumbnailUrl, postId). Invalidate blog posts queries on success."
+        },
+        {
+          "path": "frontend/src/components/BlogPostCard.tsx",
+          "operation": "create",
+          "description": "Create a blog post card component that displays: thumbnail image (use placeholder if missing), title, excerpt (first 150 chars of content), author name, publication date, and published status badge. Accept blog post object as prop. Style with charcoal background and gold accents. Make entire card clickable to navigate to full post."
+        },
+        {
+          "path": "frontend/src/pages/BlogListing.tsx",
+          "operation": "create",
+          "description": "Create BlogListing page that uses useGetPublishedBlogPosts hook and displays all published posts in a responsive grid of BlogPostCard components. Include a header with 'Golden Key Car Rental Blog' title. Wire card clicks to navigate to individual blog post page using post ID."
+        },
+        {
+          "path": "frontend/src/pages/BlogPost.tsx",
+          "operation": "create",
+          "description": "Create BlogPost page that uses useGetBlogPost hook with postId from route params. Display full blog post: large thumbnail image, title (large heading), author and date metadata, and full content (render as HTML or plain text with line breaks preserved). Include a 'Back to Blog' button. Style with luxury theme and good typography for readability."
+        },
+        {
+          "path": "frontend/src/components/admin/BlogManagementPanel.tsx",
+          "operation": "create",
+          "description": "Create a blog management panel for admin dashboard. Display table of all blog posts (published and unpublished) using useGetAllBlogPosts with columns: thumbnail, title, author, date, published status, actions (edit/delete). Include 'Create Post' button that opens a form modal with fields: title, content (textarea), author, published checkbox, thumbnail URL (optional text input). Use useCreateOrUpdateBlogPost mutation to save posts. Use the blob-storage component to support thumbnail image uploads if needed. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/AdminDashboard.tsx",
+          "operation": "modify",
+          "description": "Add a 'Blog Posts' tab to AdminDashboard that renders BlogManagementPanel component."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add routes: '/blog' for BlogListing page and '/blog/:postId' for BlogPost page. Both routes are public (no authentication required)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Add floating WhatsApp contact button on all public pages with pre-filled greeting message",
+      "acceptanceCriteria": [
+        "A floating WhatsApp icon button is visible on all public pages (bottom-right corner)",
+        "Clicking it opens a new tab with the WhatsApp chat pre-filled message",
+        "The phone number is stored in a single constants file for easy update"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/constants/contact.ts",
+          "operation": "create",
+          "description": "Create a constants file that exports WHATSAPP_PHONE_NUMBER (string in international format without + sign, e.g., '971501234567') and WHATSAPP_MESSAGE (pre-filled greeting: 'Hello, I am interested in renting a car from Golden Key Car Rental.')."
+        },
+        {
+          "path": "frontend/src/components/WhatsAppButton.tsx",
+          "operation": "create",
+          "description": "Create a floating WhatsApp button component that displays a WhatsApp icon (green circle with phone/chat icon). Position it fixed at bottom-right corner (e.g., bottom: 20px, right: 20px) with z-index high enough to appear above other content. On click, construct WhatsApp deep link: https://wa.me/{WHATSAPP_PHONE_NUMBER}?text={encodeURIComponent(WHATSAPP_MESSAGE)} and open in new tab using window.open(url, '_blank'). Style with green background (#25D366) and white icon. Add hover effect with gold border to match theme."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add WhatsAppButton component to the main App layout so it appears on all public-facing pages (outside the router but inside the main app container). Ensure it does not appear on admin or user dashboard routes by conditionally rendering based on current path."
+        }
+      ]
+    }
+  ]
+}
